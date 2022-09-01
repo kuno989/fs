@@ -1,4 +1,4 @@
-module github.com/linxGnu/goseaweedfs
+module github.com/kuno989/fs
 
 go 1.18
 
