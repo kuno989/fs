@@ -13,3 +13,7 @@ func (m FileMark) Bytes() []byte {
 func IsFileMarkBytes(b []byte, m FileMark) bool {
 	return string(b) == m.String()
 }
+
+const (
+	EmptyMakr FileMark = '\U0000FFFF'
+)
