@@ -102,6 +102,25 @@ func getFileMd5sum(filePath string) (md5sum string, err error) {
 	return getBytesMd5sum(data)
 }
 
+func getFileName(fullPath string) (fileName string) {
+	// get file name
+	arr := strings.Split(fullPath, "/")
+	fileName = arr[len(arr)-1]
+	return fileName
+}
+
+func getFileExtension(fileName string) (extension string) {
+	// get file extension
+	if strings.HasPrefix(fileName, ".") {
+		fileName = fileName[1:(len(fileName) - 1)]
+	}
+	arr := strings.Split(fileName, ".")
+	if len(arr) > 1 {
+		extension = arr[len(arr)-1]
+	}
+	return extension
+}
+
 func getFileWithExtendedFields(file FilerFileInfo) (res FilerFileInfo) {
 	// get isDir
 	file.IsDir = file.Chunks == nil
