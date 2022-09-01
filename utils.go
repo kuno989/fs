@@ -1,14 +1,17 @@
 package goseaweedfs
 
 import (
+	"context"
 	"crypto/md5"
 	"encoding/base64"
+	workerpool "github.com/linxGnu/gumble/worker-pool"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -155,4 +158,10 @@ func listFilesRecursive(dirPath string) (files []FileInfo, err error) {
 		return files, err
 	}
 	return
+}
+
+func createWorkerPool() *workerpool.Pool {
+	return workerpool.NewPool(context.Background(), workerpool.Option{
+		NumberWorker: runtime.NumCPU() << 1,
+	})
 }

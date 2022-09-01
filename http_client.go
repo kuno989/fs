@@ -10,18 +10,23 @@ import (
 	"net/textproto"
 	"path/filepath"
 	"strings"
+
+	workerpool "github.com/linxGnu/gumble/worker-pool"
 )
 
 type httpClient struct {
-	client *http.Client
+	client  *http.Client
+	workers *workerpool.Pool // worker 추가
 }
 
 func newHTTPClient(client *http.Client) *httpClient {
-	c := &httpClient{client: client}
+	c := &httpClient{client: client, workers: createWorkerPool()}
+	c.workers.Start()
 	return c
 }
 
 func (c *httpClient) Close() (err error) {
+	c.workers.Stop()
 	return
 }
 
@@ -36,6 +41,10 @@ func (c *httpClient) get(url string, header map[string]string) (body []byte, sta
 		resp, err = c.client.Do(req)
 		if err == nil {
 			body, statusCode, err = readAll(resp)
+
+			if IsFileMarkBytes(body, EmptyMakr) {
+				body = []byte{}
+			}
 		}
 	}
 
