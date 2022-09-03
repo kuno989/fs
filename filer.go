@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -67,6 +68,8 @@ func (f *Filer) UploadFile(localFilePath, newPath, collection, ttl string) (resu
 	} else {
 		fileReader = fp.Reader
 	}
+
+	fmt.Println("UploadFile", localFilePath, newPath, collection, ttl)
 
 	var b []byte
 	b, status, err := f.client.upload(encodeURI(*f.base, newPath, normalize(nil, collection, ttl)), localFilePath, fileReader, fp.MimeType)

@@ -13,4 +13,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/linxGnu/goseaweedfs => github.com/kuno989/fs master
+replace github.com/linxGnu/goseaweedfs => github.com/kuno989/fs v0.0.0-20220901151742-ad6c9864a05c
