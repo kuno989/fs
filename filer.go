@@ -56,6 +56,7 @@ func (f *Filer) Close() (err error) {
 
 // UploadFile a file.
 func (f *Filer) UploadFile(localFilePath, newPath, collection, ttl string) (result *FilerUploadResult, err error) {
+	fmt.Println("UploadFile", localFilePath, newPath, collection, ttl)
 	fp, err := NewFilePart(localFilePath)
 	if err == nil {
 		return result, err
@@ -68,8 +69,6 @@ func (f *Filer) UploadFile(localFilePath, newPath, collection, ttl string) (resu
 	} else {
 		fileReader = fp.Reader
 	}
-
-	fmt.Println("UploadFile", localFilePath, newPath, collection, ttl)
 
 	var b []byte
 	b, status, err := f.client.upload(encodeURI(*f.base, newPath, normalize(nil, collection, ttl)), localFilePath, fileReader, fp.MimeType)
