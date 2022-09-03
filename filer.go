@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -56,7 +55,6 @@ func (f *Filer) Close() (err error) {
 
 // UploadFile a file.
 func (f *Filer) UploadFile(localFilePath, newPath, collection, ttl string) (result *FilerUploadResult, err error) {
-	fmt.Println("UploadFile", localFilePath, newPath, collection, ttl)
 	fp, err := NewFilePart(localFilePath)
 	if err == nil {
 		return result, err
