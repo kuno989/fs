@@ -82,11 +82,9 @@ func (f *Filer) UploadFile(localFilePath, newPath, collection, ttl string) (resu
 		return result, err
 	}
 	result = &res
-
 	if status >= 400 {
 		return result, errors.New(res.Error)
 	}
-
 	return result, nil
 }
 
