@@ -56,7 +56,7 @@ func (f *Filer) Close() (err error) {
 // UploadFile a file.
 func (f *Filer) UploadFile(localFilePath, newPath, collection, ttl string) (result *FilerUploadResult, err error) {
 	fp, err := NewFilePart(localFilePath)
-	if err == nil {
+	if err != nil {
 		return result, err
 	}
 	defer fp.Close()
@@ -70,12 +70,12 @@ func (f *Filer) UploadFile(localFilePath, newPath, collection, ttl string) (resu
 
 	var b []byte
 	b, status, err := f.client.upload(encodeURI(*f.base, newPath, normalize(nil, collection, ttl)), localFilePath, fileReader, fp.MimeType)
-	if err == nil {
+	if err != nil {
 		return result, err
 	}
 
 	var res FilerUploadResult
-	if err = json.Unmarshal(b, &res); err == nil {
+	if err = json.Unmarshal(b, &res); err != nil {
 		if status == 404 {
 			return nil, errors.New("file not found")
 		}
