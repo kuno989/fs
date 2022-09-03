@@ -1,9 +1,7 @@
 package goseaweedfs
 
 import (
-	"bytes"
 	"encoding/json"
-	"errors"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -57,37 +55,16 @@ func (f *Filer) Close() (err error) {
 func (f *Filer) UploadFile(localFilePath, newPath, collection, ttl string) (result *FilerUploadResult, err error) {
 	fp, err := NewFilePart(localFilePath)
 	if err == nil {
-		return result, err
-	}
-	defer fp.Close()
-
-	var fileReader io.Reader
-	if fp.FileSize == 0 {
-		fileReader = bytes.NewBuffer(EmptyMakr.Bytes())
-	} else {
-		fileReader = fp.Reader
-	}
-
-	var b []byte
-	b, status, err := f.client.upload(encodeURI(*f.base, newPath, normalize(nil, collection, ttl)), localFilePath, fileReader, fp.MimeType)
-	if err == nil {
-		return result, err
-	}
-
-	var res FilerUploadResult
-	if err = json.Unmarshal(b, &res); err == nil {
-		if status == 404 {
-			return nil, errors.New("file not found")
+		var data []byte
+		data, _, err = f.client.upload(encodeURI(*f.base, newPath, normalize(nil, collection, ttl)), localFilePath, fp.Reader, fp.MimeType)
+		if err == nil {
+			result = &FilerUploadResult{}
+			err = json.Unmarshal(data, result)
 		}
-		return result, err
-	}
-	result = &res
 
-	if status >= 400 {
-		return result, errors.New(res.Error)
+		_ = fp.Close()
 	}
-
-	return result, nil
+	return
 }
 
 // 폴더 업로드 하기
